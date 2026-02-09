@@ -1,0 +1,23 @@
+# Xcode
+DerivedData/
+*.xcuserstate
+*.xcuserdata/
+
+# Build
+build/
+*.ipa
+
+# Swift Package Manager
+.build/
+
+# CocoaPods
+Pods/
+
+# macOS
+.DS_Store
+
+# Core ML
+*.mlmodelc
+
+
+
