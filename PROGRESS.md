@@ -6,6 +6,10 @@
 - Choose ML approach
 - Set up Xcode project
 
+**Hurdles**
+-Running build on physical phone to test camera integration 
+
+
 **Completed**
 - Created GitHub repository
 
