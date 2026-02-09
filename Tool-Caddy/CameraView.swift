@@ -15,9 +15,13 @@ struct CameraView: View {
     
     var body: some View {
         ZStack {
+            #if targetEnvironment(simulator)
+            Color.gray
+            #else
             
-            CameraPreview(session: cameraManager.session).ignoresSafeArea()
-        
+                CameraPreview(session: cameraManager.session).ignoresSafeArea()
+            #endif
+            
             VStack {
                 Spacer()
                 
@@ -32,15 +36,18 @@ struct CameraView: View {
             }
         }
         .onAppear {
+            #if !targetEnvironment(simulator)
             cameraManager.onPhotoCaptured = { image in
                 capturedImage = image
-                // ML Code:
+                // ML code
             }
             cameraManager.startSession()
-            
+            #endif
         }
         .onDisappear {
+            #if !targetEnvironment(simulator)
             cameraManager.stopSession()
+            #endif
         }
     }
     
