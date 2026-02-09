@@ -8,11 +8,11 @@
 // Starts/Stops session
 // Captures a still image
 //
-
+import Combine
 import AVFoundation
 import UIKit
 
-final class CameraManager: NSObject {
+final class CameraManager: NSObject, ObservableObject {
     let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     
@@ -30,11 +30,14 @@ final class CameraManager: NSObject {
             let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                  for: .video,
                                                  position: .back),
-            let input = try? AVCaptureDeviceInput(device: device)
+            let input = try? AVCaptureDeviceInput(device: device),
+            session.canAddInput(input)
         else {
+            session.commitConfiguration()
             return
         }
         
+        session.addInput(input)
         
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
