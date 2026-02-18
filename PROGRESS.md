@@ -24,5 +24,10 @@
 - Display bounding boxes
 - Integrate Vision framework
 
+**Hurdless**
+Tool detection required large scales of "messy" data, and would have benifitted from a self-created dataset. Gathering such a dataset, or using mixing available ones online would have greatly slowed development. 
+This greatly factored in the pivot to the Golf tool : Lie-Caddy. 
+
+**Completed**
 
 
