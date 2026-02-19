@@ -15,32 +15,30 @@ See `PROGRESS.md` for weekly updates.
 
 
 ## Architecture Overview:
-###[ iOS Camera Capture ]
-          │
-          ▼
-### [ Image Preprocessing ]
+### 1. [ iOS Camera Capture ]
+          
+### 2. [ Image Preprocessing ]
   - Resize to model input (e.g., 256x256)
   - Normalize pixel values (same as training)
   - Optionally crop around detected ball region
-          │
-          ▼
-### [ CoreML Model (MobileNetV3) ]
+    
+
+### 3. [ CoreML Model (MobileNetV3) ]
   - Exported from PyTorch → ONNX → CoreML (.mlmodel)
   - Fine-tuned on golf lie dataset
   - Performs image classification
-          │
-          ▼
-### [ Inference via Vision Framework ]
+    
+### 4. [ Inference via Vision Framework ]
   - VNCoreMLRequest performs real-time classification
   - Returns probabilities for each lie type
           │
           ▼
-### [ Advice Engine / Decision Logic ]
+### 5. [ Advice Engine / Decision Logic ]
   - Maps predicted lie type + environment features → shot recommendations
   - Can incorporate rule-based adjustments (e.g., slope, grass type)
           │
           ▼
-### [ UI Display / SwiftUI Overlay ]
+### 6. [ UI Display / SwiftUI Overlay ]
   - Shows predicted lie type
   - Displays recommended shot strategy
   - Updates dynamically with camera input
