@@ -15,6 +15,9 @@ See `PROGRESS.md` for weekly updates.
 
 
 ## Architecture Overview:
+
+<img width="1255" height="538" alt="image" src="https://github.com/user-attachments/assets/e5e2c570-ca68-4b4e-af28-0128d0aeaf26" />
+
 ### 1. [ iOS Camera Capture ]
           
 ### 2. [ Image Preprocessing ]
