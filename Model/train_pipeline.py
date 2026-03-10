@@ -2,8 +2,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.models as models
-from torch.utils import DataLoader, random_split
+from torch.utils.data import DataLoader, random_split, Dataset
 from torchvision import datasets, transforms
+import os
+from PIL import Image
 
 NUM_CLASSES = 3
 BATCH_SIZE = 20
@@ -12,6 +14,8 @@ LEARNING_RATE = 0.001
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 DATA_DIR = "./Data/train"
 MODEL_SAVE_PATH = "./models/mobilenet_v3_large.pth"
+
+DataClasses = {"Fairway": 0, "Rough": 1, "HardPan" : 2}
 
 
 # img processing / dataset loading
@@ -25,14 +29,45 @@ transform = transforms.Compose(
 
 ])
 
-dataset = datasets.ImageFolder(root=DATA_DIR, transform=transform)
+
+class CustomDataset(Dataset):
+    def __init__(self, data_dir, transform=None):
+        self.data_dir = data_dir
+        self.transform = transform
+        self.images = []
+        self.labels = []
+
+        for root, dirs, files in os.walk(data_dir):
+            for file in files:
+                if file.endswith("jpg"):
+                    file_path = os.path.join(root, file)
+                    self.images.append(file_path)
+                    self.labels.append(os.path.basename(root))
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, index):
+        image_path = self.images[index]
+        label = DataClasses[self.labels[index]]
+        label = torch.tensor(label)
+        image = Image.open(image_path).convert("RGB")
+
+        if self.transform:
+            image = self.transform(image)
+        
+        return image, label 
+        
+
+dataset = CustomDataset(DATA_DIR, transform)
+
 train_size = int(0.85 * len(dataset))
 val_size = len(dataset) - train_size
 
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-train_loader = DataLoader(train_dataset, BATCH_SIZE=BATCH_SIZE, shuffle=True)
-val_loader = DataLoader(val_dataset, BATCH_SIZE=BATCH_SIZE, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 
 # model setup
@@ -44,6 +79,9 @@ mobilenet_v3_large = models.mobilenet_v3_large(pretrained=True)
 
 # Modify final layer with a new classifier head
 mobilenet_v3_large.classifier[3] = nn.Linear(in_features=1280, out_features=NUM_CLASSES)
+
+
+# for layer in mobilenet_v3_large
 
 # define loss function and optimizer:
 criterion = nn.CrossEntropyLoss()
