@@ -52,3 +52,25 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 - Using healthy class as "light rough" and overgrazed class as "hard pan"
 
 
+## Week 5 - Finish Pipline - Train model on smalller dataset. 
+
+**Goals** 
+- Finalise pipeline, 
+- Choose hyperparemters
+- Fix bugs in dataset implementation
+- Evaluate model performance:
+
+**Completed**
+- Pipeline finalised E.g Train Loop, Eval loop
+- Custom Datset logic implmemented
+
+**Notes**
+- Cross Entropy loss chosen as default loss function due to its suitablilty accross many COMP Vision and classification 
+ ML tasks
+ - Hyperparamter tuning to be attempted later. 
+
+
+## Week 6
+**Goals**
+- Train model on real dataset
+- Potentially use synthetic data generation to augment current dataset. 
