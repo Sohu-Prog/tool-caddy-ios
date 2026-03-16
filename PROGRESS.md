@@ -63,11 +63,15 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 **Completed**
 - Pipeline finalised E.g Train Loop, Eval loop
 - Custom Datset logic implmemented
-
+![alt text](image.png)
+- basic model training successful!
+- avg high accuracy > 94% over 72 imgs in validation set. 
 **Notes**
 - Cross Entropy loss chosen as default loss function due to its suitablilty accross many COMP Vision and classification 
  ML tasks
  - Hyperparamter tuning to be attempted later. 
+
+
 
 
 ## Week 6

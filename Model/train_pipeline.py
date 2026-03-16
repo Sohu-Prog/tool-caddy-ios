@@ -164,3 +164,5 @@ for i in range(3):
     
 plt.tight_layout()
 plt.show()
+
+# print("Valset_size: ", val_size)
