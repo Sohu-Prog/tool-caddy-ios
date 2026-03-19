@@ -29,6 +29,7 @@ Tool detection required large scales of "messy" data, and would have benifitted 
 This greatly factored in the pivot to the Golf tool : Lie-Caddy. 
 
 **Completed**
+- Vision framework
 
 ## Week 3 - Curating Dataset
 - Dataset is being manually collected
@@ -43,6 +44,37 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 - Re-familiarise with Torch.
 - Evaluate model's effectiveness on a small dataset with limited classes. 
 
+**Completed**
+- Smaller "practice" dataset aquired (3 classes) : 
+- https://universe.roboflow.com/iowa-state-university-krhld/grass-o0vum
+- Using fairway class for fairway. 
+- https://universe.roboflow.com/idp-yg67x/grass-biabe
+- Using healthy class as "light rough" and overgrazed class as "hard pan"
+
+
+## Week 5 - Finish Pipline - Train model on smalller dataset. 
+
+**Goals** 
+- Finalise pipeline, 
+- Choose hyperparemters
+- Fix bugs in dataset implementation
+- Evaluate model performance:
+
+**Completed**
+- Pipeline finalised E.g Train Loop, Eval loop
+- Custom Datset logic implmemented
+![alt text](image.png)
+- basic model training successful!
+- avg high accuracy > 94% over 72 imgs in validation set. 
+**Notes**
+- Cross Entropy loss chosen as default loss function due to its suitablilty accross many COMP Vision and classification 
+ ML tasks
+ - Hyperparamter tuning to be attempted later. 
 
 
 
+
+## Week 6
+**Goals**
+- Train model on real dataset
+- Potentially use synthetic data generation to augment current dataset. 
