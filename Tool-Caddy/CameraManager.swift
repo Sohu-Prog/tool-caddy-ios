@@ -18,40 +18,47 @@ final class CameraManager: NSObject, ObservableObject {
     
     var onPhotoCaptured: ((UIImage) -> Void)?
     
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
+    
     override init() {
         super.init()
         configureSession()
     }
     
     private func configureSession() {
-        session.beginConfiguration()
-        
-        guard
-            let device = AVCaptureDevice.default(.builtInWideAngleCamera,
-                                                 for: .video,
-                                                 position: .back),
-            let input = try? AVCaptureDeviceInput(device: device),
-            session.canAddInput(input)
-        else {
-            session.commitConfiguration()
-            return
-        }
-        
-        session.addInput(input)
-        
-        if session.canAddOutput(photoOutput) {
-            session.addOutput(photoOutput)
+        sessionQueue.async{
+            self.session.beginConfiguration()
+            
+            guard
+                let device = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                     for: .video,
+                                                     position: .back),
+                let input = try? AVCaptureDeviceInput(device: device),
+                self.session.canAddInput(input)
+            else {
+                self.session.commitConfiguration()
+                return
+            }
+            
+            self.session.addInput(input)
+            
+            if self.session.canAddOutput(self.photoOutput) {
+                self.session.addOutput(self.photoOutput)
+            }
         }
     }
     
     func startSession() {
-        DispatchQueue.global(qos: .userInitiated).async {
+        sessionQueue.async{
+            guard !self.session.isRunning else { return }
             self.session.startRunning()
         }
     }
     
     func stopSession() {
-        session.stopRunning()
+        if session.isRunning {
+            session.stopRunning()
+        }
     }
     
     func capturePhoto() {

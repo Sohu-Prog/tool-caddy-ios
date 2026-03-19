@@ -24,6 +24,11 @@ struct CameraView: View {
                 CameraPreview(session: cameraManager.session).ignoresSafeArea()
             }
             
+            if let image = capturedImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+            }
                
             
             VStack {
@@ -44,6 +49,7 @@ struct CameraView: View {
                 if (isPreview && buttonPressed) {
                     Text("Feature not available in Preview").font(Font.largeTitle.bold()).foregroundColor(.blue).zIndex(3)
                 }
+                
             }
         }
         .onAppear {
