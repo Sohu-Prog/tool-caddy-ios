@@ -58,7 +58,6 @@ struct CameraView: View {
                     capturedImage = image
                     // ML code
                 }
-                cameraManager.startSession()
             }
         }
         .onDisappear {

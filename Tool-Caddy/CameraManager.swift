@@ -29,6 +29,11 @@ final class CameraManager: NSObject, ObservableObject {
         sessionQueue.async{
             self.session.beginConfiguration()
             
+            defer{
+                self.session.commitConfiguration()
+                self.startSession()
+                
+            }
             guard
                 let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                      for: .video,
@@ -36,7 +41,6 @@ final class CameraManager: NSObject, ObservableObject {
                 let input = try? AVCaptureDeviceInput(device: device),
                 self.session.canAddInput(input)
             else {
-                self.session.commitConfiguration()
                 return
             }
             
@@ -45,6 +49,7 @@ final class CameraManager: NSObject, ObservableObject {
             if self.session.canAddOutput(self.photoOutput) {
                 self.session.addOutput(self.photoOutput)
             }
+            
         }
     }
     
