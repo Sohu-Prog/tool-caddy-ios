@@ -80,7 +80,7 @@ val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 # model setup
 # weights=MobileNet_V3_Large_Weights.DEFAULT
 
-mv3_model = models.mobilenet_v3_large(pretrained=True)
+mv3_model = models.mobilenet_v3_large(weights=models.MobileNet_V3_Large_Weights.DEFAULT)
 for param in mv3_model.parameters():
     param.requires_grad = False
 
