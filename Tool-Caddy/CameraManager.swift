@@ -11,8 +11,12 @@
 import Combine
 import AVFoundation
 import UIKit
+import Vision
+import CoreML
 
 final class CameraManager: NSObject, ObservableObject {
+    @Published var predictionLabel: String = ""
+    
     let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     
@@ -20,8 +24,18 @@ final class CameraManager: NSObject, ObservableObject {
     
     private let sessionQueue = DispatchQueue(label: "camera.session.queue")
     
+    private var visionModel: VNCoreMLModel?
+    
+    
+    
     override init() {
         super.init()
+        do {
+            let mlModel = try MobileNetV3Classifier()
+            visionModel = try VNCoreMLModel(for: mlModel.model)
+        } catch {
+            print("Model failed to load: \(error)")
+        }
         configureSession()
     }
     
@@ -70,6 +84,10 @@ final class CameraManager: NSObject, ObservableObject {
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
+    
+    
+    
+    
 }
 
 extension CameraManager: AVCapturePhotoCaptureDelegate {
@@ -80,6 +98,34 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
             return
         }
         
+        classifyImage(uiImage)
         onPhotoCaptured?(uiImage)
+
+        
     }
+    
+    private func classifyImage(_ image: UIImage) {
+        guard let cgImage = image.cgImage,
+                let visionModel = visionModel
+        else {return}
+        
+        let request = VNCoreMLRequest(model: visionModel) {[weak self] request, error in
+            guard let results = request.results as? [VNClassificationObservation],
+                let topResult = results.first
+            else {return}
+            
+            DispatchQueue.main.async {
+                self?.predictionLabel = topResult.identifier
+    //            self.confidence = Double(topResult.confidence)
+    // To add confidence need to have softmax layer
+            }
+        }
+        
+        let handler = VNImageRequestHandler(cgImage: cgImage)
+        try? handler.perform([request])
+
+    }
+    
+    
 }
+

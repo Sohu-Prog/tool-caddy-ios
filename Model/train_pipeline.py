@@ -2,7 +2,6 @@
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torchvision.models as models
 from torch.utils.data import DataLoader, random_split, Dataset
 from torchvision import datasets, transforms
@@ -18,6 +17,7 @@ LEARNING_RATE = 0.001
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 DATA_DIR = "./Data/train"
 MODEL_SAVE_PATH = "./models/mobilenet_v3_large.pth"
+import torch.optim as optim
 
 DataClasses = Enum("DataClasses", ["Fairway", "Rough", "HardPan"], start=0)
 # class DataClasses(Enum):
@@ -27,12 +27,12 @@ DataClasses = Enum("DataClasses", ["Fairway", "Rough", "HardPan"], start=0)
 
 # img processing / dataset loading
 transform = transforms.Compose(
-    [transforms.Resize((244,244)),
+    [transforms.Resize((224,224)),
      transforms.ToTensor(),
-     transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
+    #  transforms.Normalize(
+    #     mean=[0.485, 0.456, 0.406],
+    #     std=[0.229, 0.224, 0.225]
+    # )
 
 ])
 
@@ -65,7 +65,24 @@ class CustomDataset(Dataset):
         
         return image, label 
         
+class ModelWithNorm(nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
 
+        self.register_buffer(
+            "mean", torch.tensor([0.485, 0.456, 0.406]).view(1,3,1,1)
+                             )
+        
+        self.register_buffer(
+            "std",
+            torch.tensor([0.229, 0.224, 0.225]).view(1,3,1,1)
+        )
+
+    def forward(self, x):
+        x = (x - self.mean) / self.std 
+        return self.model(x)
+    
 dataset = CustomDataset(DATA_DIR, transform)
 
 train_size = int(0.85 * len(dataset))
@@ -80,15 +97,17 @@ val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 # model setup
 # weights=MobileNet_V3_Large_Weights.DEFAULT
 
-mv3_model = models.mobilenet_v3_large(pretrained=True)
+mv3_model = models.mobilenet_v3_large(weights=models.MobileNet_V3_Large_Weights.DEFAULT)
+
 for param in mv3_model.parameters():
     param.requires_grad = False
-
 # mobile_v3_small = models.mobilenet_v3_small(pretrained=True)
 
 # Modify final layer with a new classifier head
 mv3_model.classifier[3] = nn.Linear(in_features=1280, out_features=NUM_CLASSES)
 
+
+normalised_mv3 = ModelWithNorm(mv3_model)
 
 # for layer in mobilenet_v3_large
 
@@ -98,7 +117,8 @@ mv3_model.classifier[3] = nn.Linear(in_features=1280, out_features=NUM_CLASSES)
 # Training loop
 def train_loop(model, num_epochs):
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.classifier.parameters(), lr=0.01)
+    optimizer = optim.Adam(model.model.classifier.parameters(), lr=0.01)
+
     model.train()
     for epoch in range(num_epochs):
         running_loss = 0.0
@@ -119,7 +139,7 @@ def train_loop(model, num_epochs):
         print(f"Epoch {epoch}/{num_epochs}, Loss: {running_loss/len(train_loader):.4f}")
     return model
 
-# model = train_loop(mv3_model, 5)    
+# model = train_loop(normalised_mv3, 5)    
 
 # # Evaluate Model
 # model.eval()
@@ -138,11 +158,12 @@ def train_loop(model, num_epochs):
 
 # print(f"Validation accuracy: {accuracy:.2f} ")
 
-# torch.save(model.state_dict(), "model_weights.pth")
+# torch.save(model.state_dict(), "normalised_model_weights.pth")
 
-disp_model = models.mobilenet_v3_large(pretrained=False)
+disp_model = models.mobilenet_v3_large(weights=models.MobileNet_V3_Large_Weights.DEFAULT)
 disp_model.classifier[3] = nn.Linear(in_features=1280, out_features=NUM_CLASSES)
-disp_model.load_state_dict(torch.load("model_weights.pth"))
+disp_model = ModelWithNorm(disp_model)
+disp_model.load_state_dict(torch.load("normalised_model_weights.pth"))
 disp_model.eval()
 
 # Visualisation:
@@ -158,8 +179,8 @@ for i in range(3):
 
     output = disp_model(img.unsqueeze(0))
     _, predicted = torch.max(output, 1)
-    img_denorm = img * std + mean
-    axes[i].imshow(transforms.functional.to_pil_image(img_denorm))
+    # img_denorm = img * std + mean
+    axes[i].imshow(transforms.functional.to_pil_image(img))
     axes[i].set_title(f"Pred = {DataClasses(predicted.item()).name}, actual = {DataClasses(label.item()).name}")
     
 plt.tight_layout()
