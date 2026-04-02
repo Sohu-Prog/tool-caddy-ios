@@ -34,6 +34,13 @@ struct CameraView: View {
             VStack {
                 Spacer()
                 
+                Text(cameraManager.predictionLabel)
+                    .font(.title)
+                    .bold()
+                    .padding()
+                    .background(Color.black.opacity(0.6))
+                    .foregroundColor(.white)
+                
                 Button(action: {
                     if !isPreview {
                         cameraManager.capturePhoto()
@@ -56,7 +63,11 @@ struct CameraView: View {
             if !isPreview {
                 cameraManager.onPhotoCaptured = { image in
                     capturedImage = image
-                    // ML code
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            capturedImage = nil
+                            cameraManager.predictionLabel = ""
+                    }
                 }
             }
         }
