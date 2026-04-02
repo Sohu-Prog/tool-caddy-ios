@@ -23,7 +23,10 @@ coreml_model = ct.convert(traced,
                           inputs=[ct.ImageType(
                             name="input",
                             shape=(1, 3, 224, 224),
-                        )]
+                        )],
+                        classifier_config=ct.ClassifierConfig(
+                        class_labels=["Fairway", "Rough", "HardPan"]
+                        )
                     )
 
 coreml_model.save("MobileNetV3Classifier.mlpackage")
