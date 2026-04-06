@@ -66,7 +66,10 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 ![alt text](image.png)
 - basic model training successful!
 - avg high accuracy > 94% over 72 imgs in validation set. 
-- Model exported using cormltools package
+
+** Hurdles**
+- Fixing thread race bug, causing crash on app open. 
+- Required asynchronous startup of cameramanger and camerapreview to be handled in a sequential queue. 
 
 **Notes**
 - Cross Entropy loss chosen as default loss function due to its suitablilty accross many COMP Vision and classification 
@@ -76,5 +79,16 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 
 ## Week 6
 **Goals**
+- Export model into swiftcode enuring proper prediction  on image capture. 
 - Train model on real dataset
-- Potentially use synthetic data generation to augment current dataset. 
+- Potentially use synthetic data generation to augment current dataset.
+
+**Achieved**
+- Exported model using CoreMLTools into xcode.
+- Used Vision module (VNCoreMLModeL) to genearate real time predictions from model.
+- Updated camera view to show label to image appropriately.
+
+**Hurdles**
+- Model needed to be modified (baking normalisation into model)
+- Required a wrapper (ModelWithNorm) class, which was then exported via coreML tools.
+- 
