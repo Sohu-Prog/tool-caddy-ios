@@ -91,4 +91,14 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 **Hurdles**
 - Model needed to be modified (baking normalisation into model)
 - Required a wrapper (ModelWithNorm) class, which was then exported via coreML tools.
-- 
+
+
+## Week 7/8:
+**Goals**
+- Code "advice engine", using model predictions.
+- Update UI to reflect.
+- Import assests / app theme
+- Further increase dataset
+- Begin training on actual dataset, noting class changes/performance.
+
+
