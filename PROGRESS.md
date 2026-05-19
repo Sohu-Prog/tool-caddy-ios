@@ -101,4 +101,5 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 - Further increase dataset
 - Begin training on actual dataset, noting class changes/performance.
 
-
+**Notes**
+For advice engine, pivot to a tree-based ML algorithm could be useful and potentially generate more accurate predictions/advice, however large amount of would need to be generated (combinations), so for now simple logic statements are more appropriate. 
