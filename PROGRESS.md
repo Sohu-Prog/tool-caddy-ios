@@ -78,3 +78,7 @@ Will take 4+ weeks to generate sufficient dataset am seeking alternatives.
 **Goals**
 - Train model on real dataset
 - Potentially use synthetic data generation to augment current dataset. 
+- Complete logic engine, 
+
+**Notes**
+For logic engin, pivotng to a tree-based ML algorithm could be useful and potentially generate more accurate predictions/advice, however large amount of would need to be generated (combinations), so for now simple logic statements are more appropriate. 
