@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DFAF59502FC46D4500E1DB97 /* MobileNetV3Classifier.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = DFAF594F2FC46D4500E1DB97 /* MobileNetV3Classifier.mlpackage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		DF8769172F39C3A70040B70B /* Tool-Caddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tool-Caddy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFAF594F2FC46D4500E1DB97 /* MobileNetV3Classifier.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = MobileNetV3Classifier.mlpackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				DF8769192F39C3A70040B70B /* Tool-Caddy */,
+				DFAF594F2FC46D4500E1DB97 /* MobileNetV3Classifier.mlpackage */,
 				DF8769182F39C3A70040B70B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFAF59502FC46D4500E1DB97 /* MobileNetV3Classifier.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

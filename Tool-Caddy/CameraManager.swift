@@ -16,6 +16,8 @@ import CoreML
 
 final class CameraManager: NSObject, ObservableObject {
     @Published var predictionLabel: String = ""
+    @Published var clubChoice: String = ""
+    @Published var advice: String = ""
     
     let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
@@ -110,12 +112,18 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         else {return}
         
         let request = VNCoreMLRequest(model: visionModel) {[weak self] request, error in
-            guard let results = request.results as? [VNClassificationObservation],
-                let topResult = results.first
+            guard let result = request.results?.first as? VNClassificationObservation,
+            let lieType = LieType(rawValue: result.identifier)
             else {return}
             
+            let prediction = LiePrediction(lieType:lieType)
+            let advice = AdviceEngine.advice(for: prediction)
+                    
             DispatchQueue.main.async {
-                self?.predictionLabel = topResult.identifier
+                self?.predictionLabel = prediction.lieType.rawValue
+                self?.clubChoice = advice.title
+                self?.advice = advice.detail
+                
     //            self.confidence = Double(topResult.confidence)
     // To add confidence need to have softmax layer
             }

@@ -40,6 +40,24 @@ struct CameraView: View {
                     .padding()
                     .background(Color.black.opacity(0.6))
                     .foregroundColor(.white)
+                    .opacity(cameraManager.predictionLabel.isEmpty ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.3), value: cameraManager.predictionLabel.isEmpty)
+                Text(cameraManager.clubChoice)
+                    .font(.title2)
+                    .bold()
+                    .padding()
+                    .background(Color.black.opacity(0.6))
+                    .foregroundColor(.white)
+                    .opacity(cameraManager.predictionLabel.isEmpty ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.3), value: cameraManager.predictionLabel.isEmpty)
+                Text(cameraManager.advice)
+                    .font(.caption)
+                    .bold()
+                    .padding()
+                    .background(Color.black.opacity(0.6))
+                    .foregroundColor(.white)
+                    .opacity(cameraManager.predictionLabel.isEmpty ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.3), value: cameraManager.predictionLabel.isEmpty)
                 
                 Button(action: {
                     if !isPreview {
@@ -67,6 +85,8 @@ struct CameraView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             capturedImage = nil
                             cameraManager.predictionLabel = ""
+                            cameraManager.clubChoice = ""
+                            cameraManager.advice = ""
                     }
                 }
             }
